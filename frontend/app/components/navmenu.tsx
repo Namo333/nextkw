@@ -1,145 +1,191 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import Link from "next/link"
+import { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ChevronDown, Menu, X } from 'lucide-react'
 
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
+const categories = [
+  { 
+    name: 'Category 1', 
+    links: [
+      { name: 'Link 1', href: '/category-1/link-1' },
+      { name: 'Link 2', href: '/category-1/link-2' },
+      { name: 'Link 3', href: '/category-1/link-3' },
+      { name: 'Link 4', href: '/category-1/link-4' },
+      { name: 'Link 5', href: '/category-1/link-5' },
+    ]
   },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
+  { 
+    name: 'Category 2', 
+    links: [
+      { name: 'Link 1', href: '/category-2/link-1' },
+      { name: 'Link 2', href: '/category-2/link-2' },
+      { name: 'Link 3', href: '/category-2/link-3' },
+      { name: 'Link 4', href: '/category-2/link-4' },
+      { name: 'Link 5', href: '/category-2/link-5' },
+    ]
   },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+  { 
+    name: 'Category 3', 
+    links: [
+      { name: 'Link 1', href: '/category-3/link-1' },
+      { name: 'Link 2', href: '/category-3/link-2' },
+      { name: 'Link 3', href: '/category-3/link-3' },
+      { name: 'Link 4', href: '/category-3/link-4' },
+      { name: 'Link 5', href: '/category-3/link-5' },
+    ]
   },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
+  { 
+    name: 'Category 4', 
+    links: [
+      { name: 'Link 1', href: '/category-4/link-1' },
+      { name: 'Link 2', href: '/category-4/link-2' },
+      { name: 'Link 3', href: '/category-4/link-3' },
+      { name: 'Link 4', href: '/category-4/link-4' },
+      { name: 'Link 5', href: '/category-4/link-5' },
+    ]
   },
 ]
 
-export function NavigationMenuDemo() {
+const otherLinks = [
+  { name: 'Link 2', href: '/link-2' },
+  { name: 'Link 3', href: '/link-3' },
+  { name: 'Link 4', href: '/link-4' },
+  { name: 'Link 5', href: '/link-5' },
+]
+
+export default function Component() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-              <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                    href="/"
-                  >
-                    fghfh
-                    <div className="mb-2 mt-4 text-lg font-medium">
-                      shadcn/ui
+    <header className="relative bg-background shadow-md">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Mobile menu button */}
+          <div className="flex items-center lg:hidden">
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-foreground">
+                  <span className="sr-only">Open main menu</span>
+                  {isMenuOpen ? (
+                    <X className="h-6 w-6" aria-hidden="true" />
+                  ) : (
+                    <Menu className="h-6 w-6" aria-hidden="true" />
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+                <nav className="flex flex-col gap-4">
+                  {categories.map((category, index) => (
+                    <div key={index} className="py-2">
+                      <h3 className="mb-2 text-lg font-semibold">{category.name}</h3>
+                      <ul className="space-y-2">
+                        {category.links.map((link, linkIndex) => (
+                          <li key={linkIndex}>
+                            <Link 
+                              href={link.href}
+                              className="block py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              {link.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <p className="text-sm leading-tight text-muted-foreground">
-                      Beautifully designed components that you can copy and
-                      paste into your apps. Accessible. Customizable. Open
-                      Source.
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
-              <ListItem href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Documentation
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+                  ))}
+                  {otherLinks.map((link, index) => (
+                    <Link
+                      key={index}
+                      href={link.href}
+                      className="py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                  <Button asChild className="mt-4">
+                    <Link href="/submit-application">Submit Application</Link>
+                  </Button>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Desktop navigation */}
+          <nav className="hidden lg:flex lg:items-center lg:space-x-8">
+            {/* Dropdown menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  Categories
+                  <ChevronDown className="ml-1 h-4 w-4 inline-block" aria-hidden="true" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[600px] p-4">
+                <h3 className="text-lg font-semibold mb-4 text-center">Our Categories</h3>
+                <div className="grid grid-cols-4 gap-4">
+                  {categories.map((category, index) => (
+                    <div key={index} className="space-y-2">
+                      <h4 className="text-sm font-medium text-primary">{category.name}</h4>
+                      <ul className="space-y-1">
+                        {category.links.map((link, linkIndex) => (
+                          <li key={linkIndex}>
+                            <Link 
+                              href={link.href}
+                              className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              {link.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {/* Other navigation links */}
+            {otherLinks.map((link, index) => (
+              <Link
+                key={index}
+                href={link.href}
+                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Logo */}
+          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <Link href="/">
+              <p className='w-auto'>KvandoFinance</p>
+            </Link>
+          </div>
+
+          {/* Submit Application button */}
+          <div className="hidden lg:flex lg:items-center">
+            <Button asChild className="text-base">
+              <Link href="/submit-application">Submit Application</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </header>
   )
 }
-
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  )
-})
-ListItem.displayName = "ListItem"
